@@ -1,0 +1,53 @@
+<div class="layout-container">
+  <div class="header">
+    <app-header></app-header>
+  </div>
+  <div class="main-content">
+    <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+      <div class="logo-container">
+        <button class="logo" (click)="toggleCollapse()">A</button>
+        @if (sidenavService.collapsed()) {
+        <div class="logo-text" @fadeInOut>Angular</div>
+        <button class="btn-close" @rotate (click)="toggleCollapse()">
+          <i class="fas fa-times close-icon"></i>
+        </button>
+        }
+      </div>
+      <div class="scrollwrap scrollwrap_delayed">
+        <ul class="sidenav-nav">
+          @for (navItem of navbarData; track $index) {
+          <li class="sidenav-nav_item">
+            <a
+              (click)="handleClick()"
+              class="sidenav-nav_link"
+              [ngClass]="getActiveClass()"
+              [routerLink]="[navItem.routerLink]"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="sidenav-link-icon" [class]="navItem.icon"></i>
+              @if (sidenavService.collapsed()) {
+              <span class="sidenav-link-text">{{
+                navItem.label
+              }}</span>
+              }
+            </a>
+            @if (collapsed && navItem.items) {
+              <app-sub-level-menu 
+              [data]="navItem"
+              [collapsed]="collapsed"
+              [multiple]="multiple"
+              [expanded]="navItem.expanded"
+               ></app-sub-level-menu>
+            }
+             </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  
+</div>
